@@ -44,10 +44,11 @@
     },
     methods: {
       navigate () {
-        console.log(this.navigation)
+        this.$bus.$emit('navigate', this.navigation)
       },
       doSignIn (obj) {
         // Fingindo uma chamada ajax
+        console.log(obj)
       }
     }
   }

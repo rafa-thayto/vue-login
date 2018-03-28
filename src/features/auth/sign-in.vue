@@ -24,7 +24,20 @@
 </template>
 
 <script>
+import { required, minLength, between } from 'vuelidate/lib/validators'
+
 export default {
+  mounted () {
+    this.$bus.$on('navigate', selected => this.reset(selected))
+  },
+  validations: {
+    username: {
+      required
+    },
+    password: {
+      required
+    }
+  },
   data () {
     return {
        username: '',
@@ -33,8 +46,22 @@ export default {
     }
   },
   methods: {
-    submit() {
-      this.$emit('do-sign-in', {...this.$data})
+    submit () {
+      if (this.isValid) {
+        this.$emit('do-sign-in', {...this.$data})
+      }
+    },
+    reset (selected) {
+      if (selected === 'signup') {
+        this.username = ''
+        this.password = ''
+        this.keepSignedIn = true
+      }
+    }
+  },
+  computed: {
+    isValid () {
+      return !this.$v.username.$invalid && !this.$v.password.$invalid
     }
   }
 }

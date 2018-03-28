@@ -29,6 +29,14 @@
 
 <script>
 export default {
+  mounted () {
+    this.$bus.$on('navigate', obj => {
+      console.log({
+        onde: 'signup',
+        obj
+      })
+    })
+  },
   data () {
     return {
 
