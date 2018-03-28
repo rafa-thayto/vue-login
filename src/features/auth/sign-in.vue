@@ -2,12 +2,29 @@
   <!-- Sign in -->
   <form action="#" @submit.prevent="submit" class="sign-in-htm">
     <div class="group">
-      <label for="sing-in-user1" class="label">Username</label>
-      <input id="sing-in-user1" type="text" class="input" v-model="username">
+      <label 
+        :class="{ invalid: $v.username.$dirty && $v.username.$invalid }"
+        for="sing-in-user1"
+        class="label">Username</label>
+      <input 
+        :class="{ invalid: $v.username.$dirty && $v.username.$invalid }" 
+        id="sing-in-user1"
+        type="text"
+        @input="$v.username.$touch()"
+        class="input" v-model="username">
     </div>
     <div class="group">
-      <label for="sing-in-pass1" class="label">Password</label>
-      <input id="sing-in-pass1" type="password" class="input" data-type="password" v-model="password">
+      <label 
+        :class="{ invalid: $v.password.$dirty && $v.password.$invalid }" 
+        for="sing-in-pass1" 
+        class="label">Password</label>
+      <input 
+        :class="{ invalid: $v.password.$dirty && $v.password.$invalid }" 
+        id="sing-in-pass1" 
+        type="password" 
+        data-type="password" 
+        @input="$v.password.$touch()"
+        class="input" v-model="password">
     </div>
     <div class="group">
       <input id="check" type="checkbox" class="check" v-model="keepSignedIn">
@@ -24,7 +41,7 @@
 </template>
 
 <script>
-import { required, minLength, between } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
   mounted () {
@@ -47,8 +64,10 @@ export default {
   },
   methods: {
     submit () {
-      if (this.isValid) {
+      if (!this.$v.$invalid) {
         this.$emit('do-sign-in', {...this.$data})
+      } else {
+        this.$v.$touch();
       }
     },
     reset (selected) {
@@ -56,6 +75,7 @@ export default {
         this.username = ''
         this.password = ''
         this.keepSignedIn = true
+        this.$v.$reset()
       }
     }
   },
